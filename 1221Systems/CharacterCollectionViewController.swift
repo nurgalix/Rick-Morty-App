@@ -17,8 +17,38 @@ class CharacterCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.title = "Characters"
+        
         characterManager.delegate = self
         characterManager.performRequest()
+        
+        // Initialize the collection view layout
+        let layout = UICollectionViewFlowLayout()
+        
+        // Set spacing between columns
+        layout.minimumInteritemSpacing = 8
+        
+        // Set spacing between cells
+        layout.minimumLineSpacing = 16
+        
+        // Set left margin
+        layout.sectionInset.left = 20
+        
+        // Set right margin
+        layout.sectionInset.right = 27
+        
+        // Calculate cell width based on the available space
+        let totalSpacingBetweenColumns: CGFloat = layout.minimumInteritemSpacing * CGFloat(2 - 1)
+        let totalMargins: CGFloat = layout.sectionInset.left + layout.sectionInset.right
+        let availableWidth = collectionView.bounds.width - totalSpacingBetweenColumns - totalMargins
+        let cellWidth = availableWidth / 2
+        
+        // Set cell size
+        layout.itemSize = CGSize(width: cellWidth, height: 202)
+        
+        // Assign the layout to the collection view
+        collectionView.collectionViewLayout = layout
+        
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
