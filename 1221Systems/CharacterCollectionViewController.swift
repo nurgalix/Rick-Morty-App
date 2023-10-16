@@ -7,6 +7,13 @@
 
 import UIKit
 
+private enum Constants {
+    static let collectionViewInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+    static let collectionViewMinimumInteritemSpacing: CGFloat = 16
+    static let collectionViewMinimumLineSpacing: CGFloat = 16
+    static let totalColumns: CGFloat = 2
+    static let heightRatio: CGFloat = 1.29
+}
 
 class CharacterCollectionViewController: UICollectionViewController {
 
@@ -26,25 +33,21 @@ class CharacterCollectionViewController: UICollectionViewController {
         let layout = UICollectionViewFlowLayout()
         
         // Set spacing between columns
-        layout.minimumInteritemSpacing = 8
+        layout.minimumInteritemSpacing = Constants.collectionViewMinimumInteritemSpacing
         
         // Set spacing between cells
-        layout.minimumLineSpacing = 16
+        layout.minimumLineSpacing = Constants.collectionViewMinimumLineSpacing
         
-        // Set left margin
-        layout.sectionInset.left = 20
-        
-        // Set right margin
-        layout.sectionInset.right = 27
+        layout.sectionInset = Constants.collectionViewInsets
         
         // Calculate cell width based on the available space
-        let totalSpacingBetweenColumns: CGFloat = layout.minimumInteritemSpacing * CGFloat(2 - 1)
+        let totalSpacingBetweenColumns: CGFloat = layout.minimumInteritemSpacing * CGFloat(Constants.totalColumns - 1)
         let totalMargins: CGFloat = layout.sectionInset.left + layout.sectionInset.right
         let availableWidth = collectionView.bounds.width - totalSpacingBetweenColumns - totalMargins
-        let cellWidth = availableWidth / 2
+        let cellWidth = availableWidth / Constants.totalColumns
         
         // Set cell size
-        layout.itemSize = CGSize(width: cellWidth, height: 202)
+        layout.itemSize = CGSize(width: cellWidth, height: cellWidth * Constants.heightRatio)
         
         // Assign the layout to the collection view
         collectionView.collectionViewLayout = layout
@@ -79,4 +82,15 @@ extension CharacterCollectionViewController: CharacterManagerDelegate {
     }
     
     
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension CharacterCollectionViewController {
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let character = listOfCharacters[indexPath.item]
+        let detailsViewController = CharacterDetailsViewController(character: character)
+        navigationController?.pushViewController(detailsViewController, animated: true)
+    }
 }
